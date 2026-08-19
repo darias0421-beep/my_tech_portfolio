@@ -3,7 +3,7 @@ title: "About"
 image: profile.jpg
 format:
   html:
-    theme: sketchy
+    theme: cyborg
 about:
   template: trestles
   image-title: profile picture

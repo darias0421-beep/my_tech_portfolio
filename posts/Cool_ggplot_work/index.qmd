@@ -1,0 +1,36 @@
+---
+title: "Some ggplot"
+author: "Diego Arias"
+date: "2026-08-19"
+categories: [goals,general]
+format: 
+  html:
+    theme: cyborg
+---
+
+This week i took a GREAT short course on R and learned a bit of ggplot. Here are some examples
+
+First, we learned about basic plots and mapping. Variables onto the x and y axis. Here is an example using the mpg dataset
+
+```{r}
+library(ggplot2)
+```
+
+```{r}
+ggplot(
+  data = mpg,
+  mapping = aes(
+    x = cty,
+    y = hwy
+  )
+) + geom_point()+
+  labs(
+    title = "Miles on city vs highway",
+    x = "MPG in the city roads",
+    y = "Miles on the highway",
+    caption = "This is data from the database"
+  )
+
+```
+
+This is great, but one thing that we learned about was the importance of using labels using the labs function. so here's the graph again with better labeling to make the graph stand

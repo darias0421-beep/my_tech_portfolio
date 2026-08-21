@@ -1,5 +1,5 @@
 ---
-title: "Does remote work positivley impact workers in Europe?"
+title: "Does remote work positively impact workers in Europe?"
 author: "Diego Arias"
 date: "2026-08-20"
 categories: [goals,general]
@@ -8,7 +8,7 @@ format:
     theme: cyborg
 ---
 
-Working remotely is a repetitively new concept with it growing in popularity in the 2020's.
+Working remotely is a repetitively new concept with it growing in popularity in the 2020's. Not much is known about what remote workers might have in common and how it affects their lives. A survey done on remote workers in Europe by Katharina Fellnhofer and Margarita Angelidou can help us find answers.
 
 ```{r}
 library(tidyverse)
@@ -32,12 +32,14 @@ rmap <- NULL
 
 new_rmap$experience <- as.numeric(gsub(",", ".", new_rmap$experience))
 new_rmap$education <- as.numeric(gsub(",", ".", new_rmap$education))
+new_rmap$remote_hours <- as.numeric(gsub(",", ".", new_rmap$remote_hours))
+new_rmap$office_hours <- as.numeric(gsub(",", ".", new_rmap$office_hours))
 
 
 new_rmap <- new_rmap |>
-  filter(age > 18 & age < 100 & age > experience & remote_hours >= 1 & experience > 1)
+  filter(age > 18 & age < 100 & age > experience & remote_hours >= 1 & experience > 1 & age > education & remote_hours <= 60 & office_hours <= 60 & remote_hours + office_hours <= 60)
 
-
+max(new_rmap$remote_hours, na.rm = TRUE)
 
 ggplot(
   data = new_rmap,
@@ -47,5 +49,94 @@ ggplot(
     color = gender
   )
 ) +
-  geom_point(position = "jitter")
+  geom_point(position = "jitter") +
+  labs(
+    title = "Who participated in the survey?",
+    y = "Participant's ages in years",
+    x = "Participant's years of experience ",
+    caption = "Participants in the survey"
+  )
+ggsave(filename = "graph1.png")
+```
+
+```{r}
+ggplot(
+  data = new_rmap,
+  mapping = aes(
+    x = remote_hours,
+    y = office_hours,
+    color = positive_score
+  )
+) +
+  geom_point(position = "jitter") +
+  labs(
+    x = "Hours worked remote",
+    y = "Hours worked in the office",
+    color = "Positivity rating",
+    title = "Remote work positively impacts my personal life",
+    caption = "Data collected from Europeans who work at least 1 hour remote per week"
+  )
+
+agree_scale <- c("Strongly Disagree", "Disagree", "Somewhat Disagree", "Neither Agree nor Disagree",  "Somewhat Agree", "Agree", "Strongly Agree"  )
+
+ggplot(
+  data = new_rmap,
+  mapping = aes(
+    x = factor(positive_score, levels = agree_scale),
+    y = remote_hours
+  )
+) +
+  geom_boxplot() +
+  labs(
+    x = "Hours worked remote",
+    y = "Hours worked in the office",
+    color = "Positivity rating",
+    title = "Remote work positively impacts my personal life",
+    caption = "Data collected from Europeans who work at least 1 hour remote per week"
+  )
+
+
+
+```
+
+Negativity score
+
+```{r}
+ggplot(
+  data = new_rmap,
+  mapping = aes(
+    x = remote_hours,
+    y = office_hours,
+    color = negative_score
+  )
+) +
+  geom_point(position = "jitter")+
+  labs(
+    x = "Hours worked remote",
+    y = "Hours worked in the office",
+    color = 'Negativity rating',
+    title = "Remote work negatively impacts my career advancement.",
+    caption = "Data collected from Europeans who work at least 1 hour remote per week"
+  )
+```
+
+DIFFICULT work life balance
+
+```{r}
+ggplot(
+  data = new_rmap,
+  mapping = aes(
+    x = factor(work_life_bal, levels = agree_scale),
+    color = gender
+  )
+) +
+  geom_bar()+
+  labs(
+    title = "I find it difficult to maintain a healthy work-life balance while working remotely.",
+    x = "Count",
+    y = ""
+  ) +
+  theme(
+    axis.text = element_text(size = 4.5)
+  )
 ```

@@ -1,0 +1,51 @@
+---
+title: "Does remote work positivley impact workers in Europe?"
+author: "Diego Arias"
+date: "2026-08-20"
+categories: [goals,general]
+format: 
+  html:
+    theme: cyborg
+---
+
+Working remotely is a repetitively new concept with it growing in popularity in the 2020's.
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(ggplot2)
+
+rmap <- readxl::read_excel(path = "/cloud/project/RMAP_Data_Descriptor_Data.xlsx")
+new_rmap <- rmap |>
+  rename(age = Please.share.the.following...Your.age.in.years..,
+         remote_hours = On.average..what.amount.of.time.of.your.weekly.work.schedule.do.you.perform.remotely..in.the.office.......Remotely...Hours.,
+         office_hours = On.average..what.amount.of.time.of.your.weekly.work.schedule.do.you.perform.remotely..in.the.office.......In.the.Office..Hours.,
+         education = Please.share.the.following...Total.years.of.full.time.education..from.primary.school.to.higher.education...,
+         experience = Please.share.the.following...Total.years.of.professional.working.life..count.part.time.work.as.a.fraction..e.g...0.5.for.half.time.work...,
+         gender = What.is.your.gender.,
+         industry = Please.indicate.the.industry.sector.you.work.in.,
+         positive_score = Please.rate.the.following.statements.regarding.remote.work.on.a.scale.from..1..strongly.disagree.to..7..strongly.agree.......Remote.work.positively.impacts.my.personal.life..,
+         negative_score = Please.rate.the.following.statements.regarding.remote.work.on.a.scale.from..1..strongly.disagree.to..7..strongly.agree.......Remote.work.negatively.impacts.my.career.advancement..promotion..recognition..skill.development...,
+         work_life_bal = Please.rate.the.following.statements.regarding.remote.work.on.a.scale.from..1..strongly.disagree.to..7..strongly.agree.......I.find.it.difficult.to.maintain.a.healthy.work.life.balance.while.working.remotely..
+         )
+rmap <- NULL
+
+new_rmap$experience <- as.numeric(gsub(",", ".", new_rmap$experience))
+new_rmap$education <- as.numeric(gsub(",", ".", new_rmap$education))
+
+
+new_rmap <- new_rmap |>
+  filter(age > 18 & age < 100 & age > experience & remote_hours >= 1 & experience > 1)
+
+
+
+ggplot(
+  data = new_rmap,
+  mapping = aes(
+    x = experience,
+    y = age,
+    color = gender
+  )
+) +
+  geom_point(position = "jitter")
+```

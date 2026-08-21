@@ -17,5 +17,4 @@ title-block-banner: true
 
 This is my blog! Welcome! I am sooo excited to show off my tech projects and to write text line like I am a valley girl.
 
-This is **bold** text.
-I hate [microsoft](https://microsoft.com)
+This is **bold** text. I hate [microsoft](https://microsoft.com)
